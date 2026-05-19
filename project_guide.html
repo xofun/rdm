@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>随机数抽取 APK - 项目说明</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', sans-serif; background: #F5F7FA; color: #1A1A2E; }
+
+  .hero {
+    background: linear-gradient(135deg, #6C63FF 0%, #4A42D4 100%);
+    color: white;
+    padding: 60px 40px;
+    text-align: center;
+  }
+  .hero .icon { font-size: 72px; margin-bottom: 16px; }
+  .hero h1 { font-size: 36px; font-weight: 800; margin-bottom: 8px; }
+  .hero p { font-size: 16px; opacity: 0.85; }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+
+  .features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 32px 0;
+  }
+  .feature-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 16px rgba(108,99,255,0.08);
+    text-align: center;
+  }
+  .feature-card .icon { font-size: 36px; margin-bottom: 12px; }
+  .feature-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: #1A1A2E; }
+  .feature-card p { font-size: 13px; color: #777; line-height: 1.5; }
+
+  .section {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 16px rgba(108,99,255,0.06);
+  }
+  .section h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1A1A2E;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section h2::before { content: ''; display: inline-block; width: 4px; height: 20px; background: #6C63FF; border-radius: 2px; }
+
+  .steps { list-style: none; counter-reset: step; }
+  .steps li {
+    counter-increment: step;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #F0F0F8;
+  }
+  .steps li:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .step-num {
+    width: 32px; height: 32px; min-width: 32px;
+    background: #6C63FF; color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px;
+  }
+  .step-content h4 { font-size: 15px; font-weight: 600; margin-bottom: 6px; color: #1A1A2E; }
+  .step-content p { font-size: 14px; color: #555; line-height: 1.6; }
+  .step-content code {
+    display: inline-block;
+    background: #F0F0F8;
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-family: 'Fira Code', monospace;
+    font-size: 13px;
+    color: #6C63FF;
+    margin: 2px 0;
+  }
+  .step-content pre {
+    background: #1A1A2E;
+    color: #A8FF78;
+    border-radius: 10px;
+    padding: 16px;
+    margin-top: 10px;
+    font-size: 13px;
+    line-height: 1.8;
+    overflow-x: auto;
+    font-family: 'Fira Code', 'Courier New', monospace;
+  }
+
+  .file-tree {
+    background: #1A1A2E;
+    border-radius: 12px;
+    padding: 20px;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 2;
+    color: #E0E0E0;
+    overflow-x: auto;
+  }
+  .file-tree .dir { color: #6C63FF; font-weight: bold; }
+  .file-tree .file { color: #A8FF78; }
+  .file-tree .comment { color: #888; }
+
+  .badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    margin: 2px;
+  }
+  .badge-purple { background: #EEF; color: #6C63FF; }
+  .badge-green { background: #EFE; color: #2E7D32; }
+  .badge-orange { background: #FFF3E0; color: #E65100; }
+
+  .tip {
+    background: #EEF;
+    border-left: 4px solid #6C63FF;
+    border-radius: 0 10px 10px 0;
+    padding: 12px 16px;
+    margin-top: 12px;
+    font-size: 13px;
+    color: #4A42D4;
+    line-height: 1.6;
+  }
+
+  .online-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .online-card {
+    border: 2px solid #6C63FF22;
+    border-radius: 12px;
+    padding: 20px;
+    transition: border-color 0.2s;
+  }
+  .online-card:hover { border-color: #6C63FF; }
+  .online-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 8px; color: #1A1A2E; }
+  .online-card p { font-size: 13px; color: #777; line-height: 1.5; }
+  .online-card a { color: #6C63FF; text-decoration: none; font-weight: 600; }
+
+  .preview-phone {
+    display: flex;
+    justify-content: center;
+    margin: 24px 0;
+  }
+  .phone-frame {
+    width: 280px;
+    border: 8px solid #1A1A2E;
+    border-radius: 40px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+  .phone-screen {
+    background: #F5F7FA;
+    padding: 20px 16px;
+    min-height: 520px;
+  }
+  .phone-header {
+    background: linear-gradient(135deg, #6C63FF, #4A42D4);
+    color: white;
+    text-align: center;
+    padding: 16px;
+    margin: -20px -16px 16px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .phone-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(108,99,255,0.08);
+  }
+  .phone-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .phone-input {
+    flex: 1;
+    background: #F0F0F8;
+    border-radius: 8px;
+    padding: 8px;
+    text-align: center;
+    font-size: 14px;
+    color: #1A1A2E;
+  }
+  .phone-btn {
+    background: linear-gradient(135deg, #6C63FF, #4A42D4);
+    color: white;
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 12px;
+    cursor: pointer;
+  }
+  .phone-result-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(108,99,255,0.08);
+    margin-bottom: 12px;
+  }
+  .phone-result-num {
+    font-size: 52px;
+    font-weight: 800;
+    color: #6C63FF;
+    line-height: 1;
+  }
+  .phone-result-label {
+    font-size: 12px;
+    color: #888;
+    margin-top: 6px;
+  }
+
+  footer { text-align: center; color: #aaa; padding: 40px 20px; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="icon">🎲</div>
+  <h1>随机数抽取</h1>
+  <p>Android APK · 公平 · 透明 · 随机</p>
+  <div style="margin-top: 16px;">
+    <span class="badge" style="background: rgba(255,255,255,0.2); color: white;">minSdk 21</span>
+    <span class="badge" style="background: rgba(255,255,255,0.2); color: white;">targetSdk 34</span>
+    <span class="badge" style="background: rgba(255,255,255,0.2); color: white;">Java</span>
+    <span class="badge" style="background: rgba(255,255,255,0.2); color: white;">Material Design</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- 功能特性 -->
+  <div class="features">
+    <div class="feature-card">
+      <div class="icon">🎯</div>
+      <h3>自定义范围</h3>
+      <p>设置最小值和最大值，灵活定义抽取区间</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🔢</div>
+      <h3>多数抽取</h3>
+      <p>一次抽取多个不重复的随机数，支持最多50个</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">✨</div>
+      <h3>滚动动画</h3>
+      <p>抽取时数字滚动效果，增加趣味性和仪式感</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">📜</div>
+      <h3>历史记录</h3>
+      <p>保留最近20条抽取记录，支持一键清空</p>
+    </div>
+  </div>
+
+  <!-- 界面预览 -->
+  <div class="section">
+    <h2>界面预览</h2>
+    <div class="preview-phone">
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="phone-header">随机数抽取</div>
+
+          <div class="phone-card">
+            <div style="font-size: 13px; font-weight: 700; margin-bottom: 12px; color: #1A1A2E;">抽取设置</div>
+            <div class="phone-input-row">
+              <span style="font-size: 12px; color: #555; min-width: 28px;">范围</span>
+              <div class="phone-input">1</div>
+              <span style="color: #888; font-size: 14px;">~</span>
+              <div class="phone-input">100</div>
+            </div>
+            <div class="phone-input-row">
+              <span style="font-size: 12px; color: #555; min-width: 28px;">个数</span>
+              <div class="phone-input" style="text-align: left; padding-left: 12px;">1</div>
+            </div>
+          </div>
+
+          <div class="phone-btn">开 始 抽 取</div>
+
+          <div class="phone-result-card">
+            <div class="phone-result-label">抽取结果</div>
+            <div class="phone-result-num">42</div>
+          </div>
+
+          <div style="font-size: 12px; font-weight: 700; margin: 12px 0 8px; color: #1A1A2E;">历史记录</div>
+          <div style="background: #F8F8FF; border-radius: 8px; padding: 10px; font-size: 11px; color: #555; margin-bottom: 6px;">
+            [14:23:05] 范围 1~100  抽取 1 个 → 42
+          </div>
+          <div style="background: #F8F8FF; border-radius: 8px; padding: 10px; font-size: 11px; color: #555;">
+            [14:22:31] 范围 1~50  抽取 3 个 → 7  19  33
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 项目结构 -->
+  <div class="section">
+    <h2>项目文件结构</h2>
+    <div class="file-tree">
+<span class="dir">RandomPicker/</span>
+├── <span class="file">settings.gradle</span>
+├── <span class="file">build.gradle</span>
+├── <span class="file">gradle.properties</span>
+├── <span class="dir">gradle/wrapper/</span>
+│   └── <span class="file">gradle-wrapper.properties</span>
+└── <span class="dir">app/</span>
+    ├── <span class="file">build.gradle</span>           <span class="comment"># 依赖配置</span>
+    ├── <span class="file">proguard-rules.pro</span>
+    └── <span class="dir">src/main/</span>
+        ├── <span class="file">AndroidManifest.xml</span>  <span class="comment"># 应用配置</span>
+        ├── <span class="dir">java/com/example/randompicker/</span>
+        │   └── <span class="file">MainActivity.java</span>  <span class="comment"># 主界面逻辑</span>
+        └── <span class="dir">res/</span>
+            ├── <span class="dir">layout/</span>
+            │   └── <span class="file">activity_main.xml</span>  <span class="comment"># UI 布局</span>
+            ├── <span class="dir">values/</span>
+            │   ├── <span class="file">strings.xml</span>
+            │   ├── <span class="file">colors.xml</span>
+            │   └── <span class="file">themes.xml</span>
+            └── <span class="dir">drawable/</span>
+                ├── <span class="file">btn_primary_bg.xml</span>
+                ├── <span class="file">btn_outline_red.xml</span>
+                ├── <span class="file">input_bg.xml</span>
+                ├── <span class="file">history_item_bg.xml</span>
+                └── <span class="file">ic_launcher_foreground.xml</span>
+    </div>
+  </div>
+
+  <!-- 编译方法 1: Android Studio -->
+  <div class="section">
+    <h2>方法一：Android Studio 编译（推荐）</h2>
+    <ol class="steps">
+      <li>
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>下载安装 Android Studio</h4>
+          <p>访问 <a href="https://developer.android.com/studio" style="color:#6C63FF">developer.android.com/studio</a> 下载最新版，安装时勾选 Android SDK。</p>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>打开项目</h4>
+          <p>打开 Android Studio → <code>File → Open</code> → 选择 <code>RandomPicker</code> 文件夹</p>
+          <div class="tip">💡 第一次打开会自动下载 Gradle 和依赖，需要保持网络连接（约 300MB）</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>等待同步完成</h4>
+          <p>底部进度条跑完即可。如果出现 SDK 版本错误，按照提示点击 <code>Install missing SDK</code>。</p>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>生成 APK</h4>
+          <p>菜单栏 → <code>Build → Build Bundle(s) / APK(s) → Build APK(s)</code></p>
+          <p style="margin-top: 8px;">完成后会弹出提示，点击 <strong>locate</strong> 打开文件夹，APK 位于：</p>
+          <pre>app/build/outputs/apk/debug/app-debug.apk</pre>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h4>安装到手机</h4>
+          <p>将 APK 文件传到手机 → 用文件管理器打开 → 点击安装（需开启"允许未知来源"）</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+
+  <!-- 编译方法 2: 命令行 -->
+  <div class="section">
+    <h2>方法二：命令行编译（需 JDK + Android SDK）</h2>
+    <ol class="steps">
+      <li>
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>安装 JDK 17</h4>
+          <p>下载安装 <a href="https://adoptium.net" style="color:#6C63FF">Eclipse Adoptium JDK 17</a>，设置 <code>JAVA_HOME</code> 环境变量</p>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>安装 Android SDK</h4>
+          <p>下载 <a href="https://developer.android.com/tools/sdkmanager" style="color:#6C63FF">command line tools</a>，执行：</p>
+          <pre>sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"</pre>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>进入项目目录并编译</h4>
+          <pre>cd RandomPicker
+gradlew.bat assembleDebug     # Windows
+./gradlew assembleDebug        # macOS/Linux</pre>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>找到 APK</h4>
+          <p>编译成功后 APK 在：<code>app/build/outputs/apk/debug/app-debug.apk</code></p>
+        </div>
+      </li>
+    </ol>
+  </div>
+
+  <!-- 在线编译 -->
+  <div class="section">
+    <h2>方法三：在线编译工具（无需安装环境）</h2>
+    <p style="font-size: 14px; color: #555; margin-bottom: 16px;">将项目打包上传到以下在线平台进行编译：</p>
+    <div class="online-options">
+      <div class="online-card">
+        <h4>☁️ GitHub Actions</h4>
+        <p>将项目推送到 GitHub，添加 CI 工作流，自动编译并生成 APK artifact 供下载。<br><a href="https://github.com" target="_blank">github.com</a></p>
+      </div>
+      <div class="online-card">
+        <h4>🔧 Gitpod</h4>
+        <p>在浏览器中打开云端 IDE，内置 Android SDK，可直接编译项目。<br><a href="https://gitpod.io" target="_blank">gitpod.io</a></p>
+      </div>
+      <div class="online-card">
+        <h4>📱 ApkOnline</h4>
+        <p>上传项目 ZIP，在线编译生成 APK 文件（适合简单项目）。<br><a href="https://apkonline.net" target="_blank">apkonline.net</a></p>
+      </div>
+    </div>
+    <div class="tip">
+      💡 推荐使用 <strong>GitHub Actions</strong>：将 RandomPicker 文件夹推送到 GitHub 仓库，系统会自动编译，在 Actions 页面下载 APK。
+    </div>
+  </div>
+
+  <!-- GitHub Actions 工作流 -->
+  <div class="section">
+    <h2>GitHub Actions 自动编译配置</h2>
+    <p style="font-size: 14px; color: #555; margin-bottom: 16px;">在项目根目录创建 <code>.github/workflows/build.yml</code>：</p>
+    <pre style="background: #1A1A2E; color: #A8FF78; border-radius: 12px; padding: 20px; font-size: 13px; line-height: 1.8; overflow-x: auto; font-family: 'Courier New', monospace;">name: Build APK
+
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+      - name: Build APK
+        run: ./gradlew assembleDebug
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: RandomPicker-debug
+          path: app/build/outputs/apk/debug/*.apk</pre>
+  </div>
+
+</div>
+
+<footer>
+  随机数抽取 APK · 由 WorkBuddy 生成 · 2026
+</footer>
+
+</body>
+</html>
